@@ -1,0 +1,73 @@
+name: Windows installer
+
+on:
+  push:
+    branches: [main]
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Build x64 MSI and checksum
+        id: package
+        shell: pwsh
+        run: |
+          $version = '0.0.0'
+          if ($env:GITHUB_REF_TYPE -eq 'tag') {
+            if ($env:GITHUB_REF_NAME -cnotmatch '^v[0-9]+\.[0-9]+\.[0-9]+$') {
+              throw 'Use a vMAJOR.MINOR.PATCH tag to build a release.'
+            }
+            $version = $env:GITHUB_REF_NAME.Substring(1)
+          }
+          $msi = .\scripts\Build-Installer.ps1 -Version $version
+          "installer=$($msi.Name)" >> $env:GITHUB_OUTPUT
+
+      - name: Verify install and uninstall
+        shell: powershell
+        env:
+          INSTALLER: ${{ steps.package.outputs.installer }}
+        run: .\scripts\Test-Installer.ps1 -InstallerPath (Join-Path .\bin\release $env:INSTALLER)
+
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: windows-installer
+          if-no-files-found: error
+          path: |
+            bin/release/${{ steps.package.outputs.installer }}
+            bin/release/SHA256SUMS.txt
+
+  release:
+    if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8.0.0
+        with:
+          name: windows-installer
+          path: release
+
+      - name: Publish GitHub Release
+        working-directory: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha256sum --strict --check SHA256SUMS.txt
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes \
+            --title "Interactive Display $GITHUB_REF_NAME" \
+            --notes 'Download the x64 MSI below. Close PowerPoint, run the installer, then start a slide show in desktop PowerPoint.' \
+            "InteractiveDisplay-${GITHUB_REF_NAME#v}-x64.msi" SHA256SUMS.txt

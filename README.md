@@ -4,26 +4,22 @@ Write, highlight, and erase directly on a running PowerPoint slide. Use the floa
 
 **Windows 11 · 64-bit desktop PowerPoint · C# COM add-in prototype**
 
-[Get started](#get-started) · [Toolbar](#toolbar) · [Samsung WAF setup](#samsung-waf-setup) · [Development](#development)
+[Download installer](#install) · [Toolbar](#toolbar) · [Samsung WAF setup](#samsung-waf-setup) · [Development](#development)
 
 ![A PowerPoint slideshow with the expanded annotation toolbar, a yellow highlight, and a blue pen circle and arrow](docs/images/presentation.png)
 
-## Get started
+## Install
 
-You’ll need 64-bit Windows PowerShell, the .NET Framework compiler, and the desktop Office primary interop assemblies in the Windows Global Assembly Cache. To check PowerPoint’s bitness, open **File → Account → About PowerPoint**. [Check your Office version](https://support.microsoft.com/en-us/office/lifecycle/lc-account/about-office-what-version-of-office-am-i-using) · [Install Office interop assemblies](https://learn.microsoft.com/en-us/visualstudio/vsto/how-to-install-office-primary-interop-assemblies?view=visualstudio)
+The installer is for Windows 11 on x64 PCs with **64-bit desktop PowerPoint**. To check PowerPoint’s bitness, open **File → Account → About PowerPoint**. [Check your Office version](https://support.microsoft.com/en-us/office/lifecycle/lc-account/about-office-what-version-of-office-am-i-using)
 
-1. Clone the repository or download and extract the source. Open a 64-bit Windows PowerShell window in the project folder.
-2. Close PowerPoint, then build and register the add-in for your Windows account.
+1. Open the repository’s **Releases** tab and download `InteractiveDisplay-<version>-x64.msi` from the latest release’s **Assets** section.
+2. Close PowerPoint and run the MSI. It installs the add-in for your Windows account without administrator privileges.
+3. Open a scratch presentation and press **F5**. The floating toolbar appears in **Browse** mode. Choose **Pen** and draw with a mouse, a pen, or touch.
+4. Tap **Exit presentation** or press **Esc**. Choose **Yes** to keep your marks as editable shapes, then save the deck in PowerPoint.
 
-   ```powershell
-   .\scripts\Build.ps1
-   .\scripts\Register.ps1
-   ```
+Install a newer MSI to update. To remove the add-in, close PowerPoint and uninstall **Interactive Display for PowerPoint** under **Settings → Apps → Installed apps**.
 
-3. Open a scratch presentation and press **F5**. The floating toolbar appears in **Browse** mode on the slideshow display. Choose **Pen** and draw with a mouse, a pen, or touch.
-4. Tap **Exit presentation** or press **Esc**. Choose **Yes** to keep your marks as editable shapes, then use **Save** or **Save As** in PowerPoint to write the deck to disk.
-
-The add-in loads `bin/InteractiveDisplay.dll` from the folder you registered. If you move the folder, close PowerPoint and run `Register.ps1` again from the new location.
+Releases include `SHA256SUMS.txt` for verifying downloads. The MSI is currently unsigned, so Windows may display an unknown publisher notice.
 
 ## Toolbar
 
@@ -54,22 +50,43 @@ Palm erase depends on the contact widths Windows receives from the board. If cal
 
 - [`src/`](src/) contains the C# COM add-in, WinForms toolbar, Windows pointer input, and PowerPoint shape export.
 - [`scripts/`](scripts/) contains the build and per-user registration scripts.
+- [`installer/`](installer/) defines the x64 Windows Installer package.
 - [Design and roadmap](PLAN.md) covers upcoming work, including whiteboard pages and ink recovery.
 
-After a change, close PowerPoint, rerun `Build.ps1`, then start a scratch show. Draw with two pen widths, navigate away and back, and exit from the toolbar. Keep the marks, save the deck, and reopen it to confirm the shapes are editable.
+### Build from source
+
+Use 64-bit Windows PowerShell with the .NET Framework compiler. The build finds the Office 15 interop assemblies in the Visual Studio **Microsoft 365 development** workload or the desktop Office interop assemblies in the Windows Global Assembly Cache. [Office interop assembly locations](https://learn.microsoft.com/en-us/visualstudio/vsto/office-primary-interop-assemblies?view=visualstudio)
+
+Close PowerPoint and run these commands from the repository root.
+
+```powershell
+.\scripts\Build.ps1
+.\scripts\Register.ps1
+```
+
+After rebuilding, start a scratch show, draw with two pen widths, and navigate away and back. Exit, keep the marks, and reopen the saved deck to confirm the shapes are editable. To remove the source registration, close PowerPoint and run `.\scripts\Register.ps1 -Unregister`. Remove the source registration before switching to an installed copy, or uninstall the MSI before registering a development build.
+
+### Build and publish an installer
+
+Install WiX Toolset 3.14.1 to build an MSI locally. If the tools are in a portable folder, pass its path with `-WixBin`. The MSI and checksum are written to `bin/release/`. [WiX Toolset 3.14.1](https://github.com/wixtoolset/wix3/releases/tag/wix3141rtm)
+
+```powershell
+.\scripts\Build-Installer.ps1 -Version 0.1.0
+```
+
+The [Windows installer workflow](.github/workflows/windows-installer.yml) builds and tests the MSI for pull requests and pushes to `main`. Each run provides a `windows-installer` artifact under **Actions**. To publish a release, push a version tag from the commit to release.
+
+```powershell
+git tag -a v0.1.0 -m "Interactive Display 0.1.0"
+git push origin v0.1.0
+```
+
+A successful tag build publishes the MSI and its SHA-256 checksum to **Releases**. Use a new `vMAJOR.MINOR.PATCH` tag for each release.
 
 ### Troubleshooting
 
 | Symptom | Check |
 | --- | --- |
-| The build cannot find an Office interop DLL | Check that the desktop Office interop assemblies (`Extensibility`, `office`, and `Microsoft.Office.Interop.PowerPoint`) are installed in the Windows Global Assembly Cache. [Office interop assembly locations](https://learn.microsoft.com/en-us/visualstudio/vsto/office-primary-interop-assemblies?view=visualstudio) |
-| The toolbar does not appear during a show | Reopen PowerPoint after registration. In **File → Options → Add-ins**, open **Manage → COM Add-ins → Go** and check that **Interactive Display** is enabled. |
+| The build cannot find an Office interop DLL | Check that `office.dll` and `Microsoft.Office.Interop.PowerPoint.dll` are available in the Visual Studio Office 15 interop folder or Windows Global Assembly Cache. |
+| The toolbar does not appear during a show | Reopen PowerPoint after installation. In **File → Options → Add-ins**, open **Manage → COM Add-ins → Go** and check that **Interactive Display** is enabled. |
 | The display works but touch does not | Check the USB Touch Out connection and verify that touch reaches Windows before starting the show. |
-
-### Uninstall
-
-Close PowerPoint and run the following from the project folder.
-
-```powershell
-.\scripts\Register.ps1 -Unregister
-```

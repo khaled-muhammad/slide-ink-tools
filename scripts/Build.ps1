@@ -8,27 +8,41 @@ if (-not (Test-Path -LiteralPath $compiler -PathType Leaf)) {
     throw "Could not find the 64-bit .NET Framework compiler at $compiler."
 }
 
-function Get-OfficeInterop([string] $Name, [string] $Cache) {
-    $directory = Join-Path $env:WINDIR "assembly\$Cache\$Name"
+$piaDirectories = @(
+    [Environment]::GetFolderPath('ProgramFilesX86')
+    [Environment]::GetFolderPath('ProgramFiles')
+) | Where-Object { $_ } | ForEach-Object {
+    Join-Path $_ 'Microsoft Visual Studio\Shared\Visual Studio Tools for Office\PIA\Office15'
+}
+
+function Get-OfficeInterop([string] $Name) {
+    foreach ($piaDirectory in $piaDirectories) {
+        $path = Join-Path $piaDirectory "$Name.dll"
+        if (Test-Path -LiteralPath $path -PathType Leaf) { return $path }
+    }
+
+    $directory = Join-Path $env:WINDIR "assembly\GAC_MSIL\$Name"
     $assembly = if (Test-Path -LiteralPath $directory -PathType Container) {
         Get-ChildItem -LiteralPath $directory -Filter "$Name.dll" -Recurse -File |
             Sort-Object FullName -Descending | Select-Object -First 1
     }
     if (-not $assembly) {
-        throw "Could not find $Name.dll in $directory. Install the desktop Office primary interop assemblies."
+        throw "Could not find $Name.dll. Install the Office primary interop assemblies or the Visual Studio Microsoft 365 development workload."
     }
     $assembly.FullName
 }
 
-$references = @(
-    (Get-OfficeInterop 'Extensibility' 'GAC'),
-    (Get-OfficeInterop 'office' 'GAC_MSIL'),
-    (Get-OfficeInterop 'Microsoft.Office.Interop.PowerPoint' 'GAC_MSIL'),
+$officeReferences = @(
+    (Get-OfficeInterop 'office'),
+    (Get-OfficeInterop 'Microsoft.Office.Interop.PowerPoint')
+)
+$frameworkReferences = @(
     (Join-Path $framework 'System.Drawing.dll'),
     (Join-Path $framework 'System.Windows.Forms.dll')
 )
 $arguments = @('/nologo', '/target:library', '/platform:x64', '/unsafe', '/optimize+', "/out:$output\InteractiveDisplay.dll")
-$arguments += $references | ForEach-Object { "/reference:$_" }
+$arguments += $officeReferences | ForEach-Object { "/link:$_" }
+$arguments += $frameworkReferences | ForEach-Object { "/reference:$_" }
 $arguments += Get-ChildItem -LiteralPath (Join-Path $project 'src') -Filter '*.cs' -File |
     ForEach-Object FullName
 

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define ProgId="InteractiveDisplay.PowerPoint" ?>
+  <?define ClassId="{FC353AEF-32D1-41FB-9AC6-4BCAA006AEC5}" ?>
+  <Product Id="*" Name="Interactive Display for PowerPoint" Language="1033"
+           Version="$(var.ProductVersion)" Manufacturer="Interactive Display"
+           UpgradeCode="{6681F83B-FEDE-4F46-9767-3225111BAF49}">
+    <Package InstallerVersion="500" InstallScope="perUser" Compressed="yes" />
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="DisableShutdown" />
+    <MajorUpgrade Schedule="afterInstallInitialize" AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of Interactive Display for PowerPoint is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="INSTALLFOLDER" Name="Interactive Display for PowerPoint">
+          <Component Id="AddIn" Guid="{050B0BFE-90A9-404C-AA1E-4E02483ECA40}" Win64="yes">
+            <File Id="AddInDll" Source="$(var.AddInPath)" />
+            <RemoveFolder Id="RemoveInstallFolder" On="uninstall" />
+
+            <RegistryKey Root="HKCU" Key="Software\Classes\CLSID\$(var.ClassId)">
+              <RegistryKey Key="InprocServer32">
+                <RegistryValue Type="string" Value="mscoree.dll" />
+                <RegistryValue Name="ThreadingModel" Type="string" Value="Both" />
+                <RegistryValue Name="Class" Type="string" Value="InteractiveDisplay.PowerPointAddIn" />
+                <RegistryValue Name="Assembly" Type="string" Value="$(var.AssemblyIdentity)" />
+                <RegistryValue Name="RuntimeVersion" Type="string" Value="v4.0.30319" />
+                <RegistryValue Name="CodeBase" Type="string" Value="[#AddInDll]" KeyPath="yes" />
+              </RegistryKey>
+              <RegistryValue Key="ProgId" Type="string" Value="$(var.ProgId)" />
+            </RegistryKey>
+            <RegistryValue Root="HKCU" Key="Software\Classes\$(var.ProgId)\CLSID"
+                           Type="string" Value="$(var.ClassId)" />
+            <RegistryKey Root="HKCU" Key="Software\Microsoft\Office\PowerPoint\Addins\$(var.ProgId)">
+              <RegistryValue Name="FriendlyName" Type="string" Value="Interactive Display" />
+              <RegistryValue Name="Description" Type="string" Value="Floating slideshow annotation tools" />
+              <RegistryValue Name="LoadBehavior" Type="integer" Value="3" />
+            </RegistryKey>
+          </Component>
+        </Directory>
+      </Directory>
+    </Directory>
+    <Feature Id="Main" Title="Interactive Display for PowerPoint" Level="1">
+      <ComponentRef Id="AddIn" />
+    </Feature>
+  </Product>
+</Wix>

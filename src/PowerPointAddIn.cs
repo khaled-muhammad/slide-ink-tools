@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Extensibility;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 [assembly: ComVisible(false)]
@@ -19,7 +18,7 @@ namespace InteractiveDisplay
         private ShowSession pending;
         private Timer finishTimer;
 
-        public void OnConnection(object host, ext_ConnectMode mode, object addIn, ref Array custom)
+        public void OnConnection(object host, ConnectMode mode, object addIn, ref Array custom)
         {
             application = (PowerPoint.Application)host;
             application.SlideShowBegin += BeginShow;
@@ -27,7 +26,7 @@ namespace InteractiveDisplay
             application.SlideShowEnd += EndShow;
         }
 
-        public void OnDisconnection(ext_DisconnectMode mode, ref Array custom)
+        public void OnDisconnection(DisconnectMode mode, ref Array custom)
         {
             Stop();
         }

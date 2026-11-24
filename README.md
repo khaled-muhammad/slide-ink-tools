@@ -4,7 +4,7 @@ Write, highlight, and erase directly on a running PowerPoint slide. Use the floa
 
 **Windows 11 · 64-bit desktop PowerPoint · C# COM add-in prototype**
 
-[Download installer](#install) · [Toolbar](#toolbar) · [Samsung WAF setup](#samsung-waf-setup) · [Development](#development)
+[Download installer](https://github.com/khaled-muhammad/slide-ink-tools/releases/latest) · [Installation](#install) · [Toolbar](#toolbar) · [Samsung WAF setup](#samsung-waf-setup) · [Development](#development)
 
 ![A PowerPoint slideshow with the expanded annotation toolbar, a yellow highlight, and a blue pen circle and arrow](docs/images/presentation.png)
 
@@ -12,7 +12,7 @@ Write, highlight, and erase directly on a running PowerPoint slide. Use the floa
 
 The installer is for Windows 11 on x64 PCs with **64-bit desktop PowerPoint**. To check PowerPoint’s bitness, open **File → Account → About PowerPoint**. [Check your Office version](https://support.microsoft.com/en-us/office/lifecycle/lc-account/about-office-what-version-of-office-am-i-using)
 
-1. Open the repository’s **Releases** tab and download `SlideInkTools-<version>-x64.msi` from the latest release’s **Assets** section.
+1. Download `SlideInkTools-<version>-x64.msi` from the **Assets** section. [Latest release](https://github.com/khaled-muhammad/slide-ink-tools/releases/latest)
 2. Close PowerPoint and run the MSI. It installs the add-in for your Windows account without administrator privileges.
 3. Open a scratch presentation and press **F5**. The floating toolbar appears in **Browse** mode. Choose **Pen** and draw with a mouse, a pen, or touch.
 4. Tap **Exit presentation** or press **Esc**. Choose **Yes** to keep your marks as editable shapes, then save the deck in PowerPoint.

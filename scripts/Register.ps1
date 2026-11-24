@@ -41,6 +41,6 @@ New-Item -Path (Join-Path $classKey 'ProgId') -Force | Out-Null
 Set-Item -LiteralPath (Join-Path $classKey 'ProgId') -Value $progId
 
 New-Item -Path $officeKey -Force | Out-Null
-New-ItemProperty -LiteralPath $officeKey -Name FriendlyName -Value 'Interactive Display' -PropertyType String -Force | Out-Null
+New-ItemProperty -LiteralPath $officeKey -Name FriendlyName -Value 'Slide Ink Tools' -PropertyType String -Force | Out-Null
 New-ItemProperty -LiteralPath $officeKey -Name Description -Value 'Floating slideshow annotation tools' -PropertyType String -Force | Out-Null
 New-ItemProperty -LiteralPath $officeKey -Name LoadBehavior -Value 3 -PropertyType DWord -Force | Out-Null

@@ -15,7 +15,7 @@ if (-not [Environment]::Is64BitProcess -or $PSVersionTable.PSEdition -ne 'Deskto
     throw 'Run the installer check in 64-bit Windows PowerShell.'
 }
 if ((Test-Path -LiteralPath $dll, $officeKey, $classKey, $progIdKey) -contains $true) {
-    throw 'Run the installer check under an account without Interactive Display installed or registered.'
+    throw 'Run the installer check under an account without Slide Ink Tools installed or registered.'
 }
 if (Get-Process POWERPNT -ErrorAction SilentlyContinue) {
     throw 'Close PowerPoint before checking the installer.'
@@ -36,7 +36,7 @@ Invoke-Msi 'i'
 try {
     $application = Get-ItemProperty -LiteralPath $officeKey
     $registration = Get-ItemProperty -LiteralPath $classKey
-    if ($application.LoadBehavior -ne 3 -or $registration.CodeBase -ne $dll -or
+    if ($application.FriendlyName -ne 'Slide Ink Tools' -or $application.LoadBehavior -ne 3 -or $registration.CodeBase -ne $dll -or
         ((Test-Path -LiteralPath $dll, $progIdKey) -contains $false)) {
         throw 'The MSI did not register the installed add-in for the current user.'
     }

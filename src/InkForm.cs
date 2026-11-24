@@ -15,7 +15,7 @@ namespace InteractiveDisplay
         private Rectangle dirty;
         private bool frameQueued;
 
-        public InkForm(Action<Graphics, Rectangle> paint) : base("Interactive Display Ink", true)
+        public InkForm(Action<Graphics, Rectangle> paint) : base("Slide Ink Tools Overlay", true)
         {
             this.paint = paint;
         }
@@ -65,7 +65,7 @@ namespace InteractiveDisplay
                     try { buffer = new LayeredInkBuffer(ClientSize); }
                     catch (Win32Exception error)
                     {
-                        System.Diagnostics.Trace.TraceError("Interactive Display ink surface: " + error.Message);
+                        System.Diagnostics.Trace.TraceError("Slide Ink Tools ink surface: " + error.Message);
                         return;
                     }
                     pixels = ClientRectangle;

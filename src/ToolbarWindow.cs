@@ -29,7 +29,7 @@ namespace InteractiveDisplay
         public bool IsExpanded { get; private set; }
         public bool IsClosed { get; private set; }
 
-        public ToolbarWindow() : base("Interactive Display Tools", false)
+        public ToolbarWindow() : base("Slide Ink Tools", false)
         {
             BackColor = Color.FromArgb(24, 34, 47);
             AttachDrag(Add(ToolbarGlyph.Grip, "Move", null));

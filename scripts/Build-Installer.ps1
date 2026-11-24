@@ -33,17 +33,18 @@ $project = Split-Path -Parent $PSScriptRoot
 $build = Join-Path $project 'bin'
 $output = Join-Path $build 'release'
 $object = Join-Path $build 'InteractiveDisplay.wixobj'
-$packageName = "InteractiveDisplay-$Version-x64.msi"
+$packageName = "SlideInkTools-$Version-x64.msi"
 $package = Join-Path $build $packageName
 $installer = Join-Path $output $packageName
 $source = Join-Path $project 'installer\InteractiveDisplay.wxs'
+$icon = Join-Path $project 'installer\SlideInkTools.ico'
 
 & (Join-Path $PSScriptRoot 'Build.ps1') | Out-Host
 $dll = Join-Path $build 'InteractiveDisplay.dll'
 $assembly = [Reflection.AssemblyName]::GetAssemblyName($dll).FullName
 New-Item -ItemType Directory -Path $output -Force | Out-Null
 
-& $candle -nologo -arch x64 "-dProductVersion=$Version" "-dAddInPath=$dll" "-dAssemblyIdentity=$assembly" -out $object $source
+& $candle -nologo -arch x64 "-dProductVersion=$Version" "-dAddInPath=$dll" "-dAssemblyIdentity=$assembly" "-dBrandIconPath=$icon" -out $object $source
 if ($LASTEXITCODE -ne 0) { throw 'WiX could not compile the installer.' }
 & $light -nologo -spdb -out $package $object
 if ($LASTEXITCODE -ne 0) { throw 'WiX could not build the installer.' }

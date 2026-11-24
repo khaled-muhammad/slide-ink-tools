@@ -13,6 +13,7 @@ namespace InteractiveDisplay
     [ClassInterface(ClassInterfaceType.None)]
     public sealed class PowerPointAddIn : IDTExtensibility2
     {
+        private const string ProductName = "Slide Ink Tools";
         private PowerPoint.Application application;
         private ShowSession session;
         private ShowSession pending;
@@ -50,7 +51,7 @@ namespace InteractiveDisplay
             }
             catch (Exception error)
             {
-                Report("Interactive Display could not start.", error);
+                Report(ProductName + " could not start.", error);
             }
         }
 
@@ -88,7 +89,7 @@ namespace InteractiveDisplay
 
             while (MessageBox.Show(
                 "Keep the marks as editable objects on the slides? Use PowerPoint Save or Save As afterward to write the deck to disk.",
-                "Interactive Display", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
@@ -128,7 +129,7 @@ namespace InteractiveDisplay
 
         private static void Report(string message, Exception error)
         {
-            MessageBox.Show(message + Environment.NewLine + error.Message, "Interactive Display",
+            MessageBox.Show(message + Environment.NewLine + error.Message, ProductName,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

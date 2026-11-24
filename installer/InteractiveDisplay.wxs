@@ -2,17 +2,21 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <?define ProgId="InteractiveDisplay.PowerPoint" ?>
   <?define ClassId="{FC353AEF-32D1-41FB-9AC6-4BCAA006AEC5}" ?>
-  <Product Id="*" Name="Interactive Display for PowerPoint" Language="1033"
-           Version="$(var.ProductVersion)" Manufacturer="Interactive Display"
+  <?define ProductName="Slide Ink Tools for PowerPoint" ?>
+  <Product Id="*" Name="$(var.ProductName)" Language="1033"
+           Version="$(var.ProductVersion)" Manufacturer="Slide Ink Tools"
            UpgradeCode="{6681F83B-FEDE-4F46-9767-3225111BAF49}">
     <Package InstallerVersion="500" InstallScope="perUser" Compressed="yes" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="DisableShutdown" />
+    <Icon Id="SlideInkTools.ico" SourceFile="$(var.BrandIconPath)" />
+    <Property Id="ARPPRODUCTICON" Value="SlideInkTools.ico" />
     <MajorUpgrade Schedule="afterInstallInitialize" AllowSameVersionUpgrades="yes"
-                  DowngradeErrorMessage="A newer version of Interactive Display for PowerPoint is already installed." />
+                  DowngradeErrorMessage="A newer version of $(var.ProductName) is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="LocalAppDataFolder">
+        <!-- Keep the component path stable across installer upgrades. -->
         <Directory Id="INSTALLFOLDER" Name="Interactive Display for PowerPoint">
           <Component Id="AddIn" Guid="{050B0BFE-90A9-404C-AA1E-4E02483ECA40}" Win64="yes">
             <File Id="AddInDll" Source="$(var.AddInPath)" />
@@ -32,7 +36,7 @@
             <RegistryValue Root="HKCU" Key="Software\Classes\$(var.ProgId)\CLSID"
                            Type="string" Value="$(var.ClassId)" />
             <RegistryKey Root="HKCU" Key="Software\Microsoft\Office\PowerPoint\Addins\$(var.ProgId)">
-              <RegistryValue Name="FriendlyName" Type="string" Value="Interactive Display" />
+              <RegistryValue Name="FriendlyName" Type="string" Value="Slide Ink Tools" />
               <RegistryValue Name="Description" Type="string" Value="Floating slideshow annotation tools" />
               <RegistryValue Name="LoadBehavior" Type="integer" Value="3" />
             </RegistryKey>
@@ -40,7 +44,7 @@
         </Directory>
       </Directory>
     </Directory>
-    <Feature Id="Main" Title="Interactive Display for PowerPoint" Level="1">
+    <Feature Id="Main" Title="$(var.ProductName)" Level="1">
       <ComponentRef Id="AddIn" />
     </Feature>
   </Product>

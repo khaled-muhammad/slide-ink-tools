@@ -1,4 +1,4 @@
-# Interactive Display PowerPoint Add-in Plan
+# Slide Ink Tools for PowerPoint Plan
 
 This document records the design and roadmap. See the [README](README.md) for the features available in the current prototype and how to run it.
 

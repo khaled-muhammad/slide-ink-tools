@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Slide Ink Tools logo</title>
+  <rect x="1" y="1" width="126" height="126" rx="29" fill="#142437" stroke="#34516A" stroke-width="2"/>
+  <path d="M66 35H32a8 8 0 0 0-8 8v40a8 8 0 0 0 8 8h64a8 8 0 0 0 8-8V66"
+        fill="none" stroke="#EBF4FF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M37 54h18M37 66h11" fill="none" stroke="#8198B2" stroke-width="5" stroke-linecap="round"/>
+  <path d="M35 81c5-4 9-4 13 0s8 4 12 0" fill="none" stroke="#FFCB77" stroke-width="4" stroke-linecap="round"/>
+  <path d="M56 82l4-12 38-38a4 4 0 0 1 6 0l6 6a4 4 0 0 1 0 6L72 82l-12 4a3 3 0 0 1-4-4Z"
+        fill="#66DBFF"/>
+  <path d="m92 40 10 10" fill="none" stroke="#142437" stroke-width="4" stroke-linecap="round"/>
+</svg>

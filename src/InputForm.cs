@@ -45,7 +45,7 @@ namespace InteractiveDisplay
 
         public InputForm(Action<PointerSample> start, Action<PointerSample> move, Action<PointerSample> finish,
             Action<int> cancel, Func<int, bool> acceptsUpdate)
-            : base("Interactive Display Input", false)
+            : base("Slide Ink Tools Input", false)
         {
             this.start = start;
             this.move = move;

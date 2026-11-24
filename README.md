@@ -1,4 +1,4 @@
-# Interactive Display for PowerPoint
+# <img src="docs/images/slide-ink-tools.svg" width="56" height="56" alt=""> Slide Ink Tools for PowerPoint
 
 Write, highlight, and erase directly on a running PowerPoint slide. Use the floating toolbar to navigate, add blank slides, and keep annotations as editable PowerPoint shapes when the show ends.
 
@@ -12,12 +12,12 @@ Write, highlight, and erase directly on a running PowerPoint slide. Use the floa
 
 The installer is for Windows 11 on x64 PCs with **64-bit desktop PowerPoint**. To check PowerPoint’s bitness, open **File → Account → About PowerPoint**. [Check your Office version](https://support.microsoft.com/en-us/office/lifecycle/lc-account/about-office-what-version-of-office-am-i-using)
 
-1. Open the repository’s **Releases** tab and download `InteractiveDisplay-<version>-x64.msi` from the latest release’s **Assets** section.
+1. Open the repository’s **Releases** tab and download `SlideInkTools-<version>-x64.msi` from the latest release’s **Assets** section.
 2. Close PowerPoint and run the MSI. It installs the add-in for your Windows account without administrator privileges.
 3. Open a scratch presentation and press **F5**. The floating toolbar appears in **Browse** mode. Choose **Pen** and draw with a mouse, a pen, or touch.
 4. Tap **Exit presentation** or press **Esc**. Choose **Yes** to keep your marks as editable shapes, then save the deck in PowerPoint.
 
-Install a newer MSI to update. To remove the add-in, close PowerPoint and uninstall **Interactive Display for PowerPoint** under **Settings → Apps → Installed apps**.
+Install a newer MSI to update. To remove the add-in, close PowerPoint and uninstall **Slide Ink Tools for PowerPoint** under **Settings → Apps → Installed apps**.
 
 Releases include `SHA256SUMS.txt` for verifying downloads. The MSI is currently unsigned, so Windows may display an unknown publisher notice.
 
@@ -77,7 +77,7 @@ Install WiX Toolset 3.14.1 to build an MSI locally. If the tools are in a portab
 The [Windows installer workflow](.github/workflows/windows-installer.yml) builds and tests the MSI for pull requests and pushes to `main`. Each run provides a `windows-installer` artifact under **Actions**. To publish a release, push a version tag from the commit to release.
 
 ```powershell
-git tag -a v0.1.0 -m "Interactive Display 0.1.0"
+git tag -a v0.1.0 -m "Slide Ink Tools 0.1.0"
 git push origin v0.1.0
 ```
 
@@ -88,5 +88,5 @@ A successful tag build publishes the MSI and its SHA-256 checksum to **Releases*
 | Symptom | Check |
 | --- | --- |
 | The build cannot find an Office interop DLL | Check that `office.dll` and `Microsoft.Office.Interop.PowerPoint.dll` are available in the Visual Studio Office 15 interop folder or Windows Global Assembly Cache. |
-| The toolbar does not appear during a show | Reopen PowerPoint after installation. In **File → Options → Add-ins**, open **Manage → COM Add-ins → Go** and check that **Interactive Display** is enabled. |
+| The toolbar does not appear during a show | Reopen PowerPoint after installation. In **File → Options → Add-ins**, open **Manage → COM Add-ins → Go** and check that **Slide Ink Tools** is enabled. |
 | The display works but touch does not | Check the USB Touch Out connection and verify that touch reaches Windows before starting the show. |

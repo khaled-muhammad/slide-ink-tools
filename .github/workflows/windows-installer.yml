@@ -68,6 +68,6 @@ jobs:
           sha256sum --strict --check SHA256SUMS.txt
           gh release create "$GITHUB_REF_NAME" \
             --repo "$GITHUB_REPOSITORY" --verify-tag --generate-notes \
-            --title "Interactive Display $GITHUB_REF_NAME" \
+            --title "Slide Ink Tools $GITHUB_REF_NAME" \
             --notes 'Download the x64 MSI below. Close PowerPoint, run the installer, then start a slide show in desktop PowerPoint.' \
-            "InteractiveDisplay-${GITHUB_REF_NAME#v}-x64.msi" SHA256SUMS.txt
+            "SlideInkTools-${GITHUB_REF_NAME#v}-x64.msi" SHA256SUMS.txt
